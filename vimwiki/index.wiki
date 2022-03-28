@@ -1,4 +1,4 @@
-= Welcome to Le Chen's github Page =
+= Welcome to Le Chen's Github Page =
 1. More to come...
 2. Update the template file.
 3. Testing LaTex using [[https://www.mathjax.org/|MathJax]]: $1/x$, $\int_0^x\sin(y)d y$.
