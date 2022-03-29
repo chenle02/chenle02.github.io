@@ -3,3 +3,10 @@
 2. Update the template file.
 3. Testing LaTex using [[https://www.mathjax.org/|MathJax]]: $1/x$, $\int_0^x\sin(y)d y$.
 4. Some more demonstrations to my students.
+
+
+= Homework 1 =
+
+\[
+  \limsup_{x\to 0} a_x
+\]
