@@ -10,3 +10,9 @@
 \[
   \limsup_{x\to 0} a_x
 \]
+
+= Homework 2 =
+
+== Problem 1 ==
+
+Here is the solution.
