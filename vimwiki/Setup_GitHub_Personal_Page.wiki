@@ -1,20 +1,22 @@
 1. Create your folder structure:
 {{{
 
-..
+
+chenle02.github.io
 ├── index.html -> vimwiki_html/index.html
 ├── LICENSE
 ├── style.css -> vimwiki_html/style.css
 ├── templates
 │   └── Github.html
 ├── vimwiki
-│   ├── How to setup the GitHub personal page using vimwiki.wiki
-│   └── index.wiki
+│   ├── index.wiki
+│   └── Setup_GitHub_Personal_Page.wiki
 └── vimwiki_html
     ├── index.html
+    ├── Setup_GitHub_Personal_Page.html
     └── style.css
 
-3 directories, 8 files
+3 directories, 9 files
 
 }}}
 
