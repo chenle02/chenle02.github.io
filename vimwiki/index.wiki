@@ -19,3 +19,4 @@ Here is the solution.
 
 == This is a demo to Ian and Shehzaib ==
 
+* [[How to setup the GitHub personal page using vimwiki]]

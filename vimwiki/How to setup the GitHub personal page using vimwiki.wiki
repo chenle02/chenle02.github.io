@@ -1,0 +1,39 @@
+1. Create your folder structure:
+{{{
+
+..
+├── index.html -> vimwiki_html/index.html
+├── LICENSE
+├── style.css -> vimwiki_html/style.css
+├── templates
+│   └── Github.html
+├── vimwiki
+│   ├── How to setup the GitHub personal page using vimwiki.wiki
+│   └── index.wiki
+└── vimwiki_html
+    ├── index.html
+    └── style.css
+
+3 directories, 8 files
+
+}}}
+
+2. Set up your vimwiki in init.vim:
+{{{
+
+let wiki_Github_Homepage = {}
+let wiki_Github_Homepage.path = '$HOME/path/to/your/directory/chenle02.github.io/vimwiki'
+let wiki_Github_Homepage.path_html = '$HOME/path/to/your/directory/chenle02.github.io/vimwiki_html'
+let wiki_Github_Homepage.template_path = '$HOME/path/to/your/directory/chenle02.github.io/templates'
+let wiki_Github_Homepage.template_default =  'Github'
+let wiki_Github_Homepage.template_ext = '.html'
+
+let g:vimwiki_list = [
+      \ wiki_default,
+      \ wiki_Github_Homepage,
+      \ ]
+
+}}}
+
+3. Copy the templates file [[local:../templates/Github.html|Github.html]] to your template directory.
+
