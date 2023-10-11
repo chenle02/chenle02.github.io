@@ -38,4 +38,19 @@ let g:vimwiki_list = [
 }}}
 
 3. Copy the templates file [[local:../templates/Github.html|Github.html]] to your template directory.
+4. Copy the following content to the index.html in the home folder of the project:
+{{{
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0;url=/vimwiki_html/">
+    <title>Redirecting...</title>
+</head>
+<body>
+    If you are not redirected, <a href="/vimwiki_html/">click here</a>.
+</body>
+</html>
+  
+}}}
 
