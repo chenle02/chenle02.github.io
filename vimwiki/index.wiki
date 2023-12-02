@@ -23,4 +23,4 @@ Here is the solution.
 
 == Here is the documentation for the simulation code ==
 
-[[file:../Simulations_on_Some_Surface_Growth_Models/docs/index.html|Simulation-Link]]
+[[local:../Simulations_on_Some_Surface_Growth_Models/docs/index.html|Simulation-Link]]
