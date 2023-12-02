@@ -1,0 +1,109 @@
+<html>
+<head>
+
+    <!-- Setup MathJax -->
+    <meta name="robots" content="noindex">
+    <link rel="Stylesheet" type="text/css" href="style.css" />
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                macros: {
+                    R: "\\mathbb{R}",
+                    P: "\\mathbb{P}",
+                    Norm: ["\\left\\|| #1 \\right\\||",1]
+                }
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+
+
+    <title>Le Chen's GitHub Personal Page powered by Vimwiki</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+    <a href="index.html">Index</a>
+    <!-- <!&#45;&#45; |<a href="diary/diary.html">Diary</a> | Something else &#45;&#45;> -->
+    <!-- <hr> -->
+    <div class="content">
+    
+<ol>
+<li>
+Create your folder structure:
+<pre>
+
+
+chenle02.github.io
+├── index.html -&gt; vimwiki_html/index.html
+├── LICENSE
+├── style.css -&gt; vimwiki_html/style.css
+├── templates
+│   └── Github.html
+├── vimwiki
+│   ├── index.wiki
+│   └── Setup_GitHub_Personal_Page.wiki
+└── vimwiki_html
+    ├── index.html
+    ├── Setup_GitHub_Personal_Page.html
+    └── style.css
+
+3 directories, 9 files
+
+</pre>
+
+<li>
+Set up your vimwiki in init.vim:
+<pre>
+
+let wiki_Github_Homepage = {}
+let wiki_Github_Homepage.path = '$HOME/path/to/your/directory/chenle02.github.io/vimwiki'
+let wiki_Github_Homepage.path_html = '$HOME/path/to/your/directory/chenle02.github.io/vimwiki_html'
+let wiki_Github_Homepage.template_path = '$HOME/path/to/your/directory/chenle02.github.io/templates'
+let wiki_Github_Homepage.template_default =  'Github'
+let wiki_Github_Homepage.template_ext = '.html'
+
+let g:vimwiki_list = [
+      \ wiki_default,
+      \ wiki_Github_Homepage,
+      \ ]
+
+</pre>
+
+<li>
+Copy the templates file <a href="../templates/Github.html">Github.html</a> to your template directory.
+
+<li>
+Copy the following content to the index.html in the home folder of the project:
+<pre>
+
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="refresh" content="0;url=/vimwiki_html/"&gt;
+    &lt;title&gt;Redirecting...&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    If you are not redirected, &lt;a href="/vimwiki_html/"&gt;click here&lt;/a&gt;.
+&lt;/body&gt;
+&lt;/html&gt;
+  
+</pre>
+
+</ol>
+
+    </div>
+<hr>
+<script language="Javascript">
+document.write("This page was powered by Vimwiki and was last modified on: " + document.lastModified +"");
+</SCRIPT>
+<hr>
+<center>&copy; Le Chen, 2022, chenle02@gmail.com </center>
+</body>
+</html>
