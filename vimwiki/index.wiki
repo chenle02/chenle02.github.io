@@ -20,3 +20,7 @@ Here is the solution.
 == This is a demo to Ian and Shehzaib ==
 
 * [[Setup_GitHub_Personal_Page|How to setup the GitHub personal page using vimwiki]]
+
+== Here is the documentation for the simulation code ==
+
+[[../Simulations_on_Some_Surface_Growth_Models/docs/index.html|Link]]
