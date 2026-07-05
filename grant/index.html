@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Le-AI-Lab · AI for Science Application</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0b0f'/%3E%3Cpath d='M17 33l9 9 21-23' fill='none' stroke='%2368e4ff' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0a0b0f;
+      --bg-2: #0d111a;
+      --panel: rgba(255, 255, 255, 0.055);
+      --panel-strong: rgba(255, 255, 255, 0.095);
+      --stroke: rgba(255, 255, 255, 0.14);
+      --stroke-strong: rgba(125, 232, 255, 0.46);
+      --text: #f6f8fb;
+      --muted: #a6b0c3;
+      --soft: #d8e0ef;
+      --accent: #68e4ff;
+      --accent-2: #8a7cff;
+      --good: #8bf0c5;
+      --warning: #f8d47a;
+      --danger: #ff8f9a;
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+      --space-1: 0.5rem;
+      --space-2: 0.75rem;
+      --space-3: 1rem;
+      --space-4: 1.5rem;
+      --space-5: 2rem;
+      --space-6: 3rem;
+      --space-7: 4.5rem;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+      --max: 1180px;
+      --ease: cubic-bezier(0.19, 1, 0.22, 1);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(104, 228, 255, 0.16), transparent 32rem),
+        radial-gradient(circle at 86% 6%, rgba(138, 124, 255, 0.18), transparent 29rem),
+        linear-gradient(180deg, #07080c 0%, var(--bg) 45%, #07080b 100%);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.34;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: linear-gradient(to bottom, black, transparent 78%);
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.045;
+      background-image: radial-gradient(circle, #fff 0.75px, transparent 0.75px);
+      background-size: 8px 8px;
+      mix-blend-mode: screen;
+    }
+
+    .shell { position: relative; z-index: 1; width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(180deg, rgba(10,11,15,0.94), rgba(10,11,15,0.72));
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 0.72rem; color: var(--text); font-weight: 760; letter-spacing: 0.12em; text-decoration: none; }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(104,228,255,0.18), rgba(138,124,255,0.16));
+      border: 1px solid var(--stroke-strong);
+      box-shadow: 0 0 34px rgba(104,228,255,0.22);
+    }
+    .brand-mark svg { width: 20px; height: 20px; }
+    .nav-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.5rem 0.75rem; }
+    /* biome-ignore lint/style/noDescendingSpecificity: scoped content-link rules intentionally share the nav link region. */
+    .card a, .caption a, .lead a, .panel a, td a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(104, 228, 255, 0.35); transition: border-color 160ms var(--ease); }
+    /* biome-ignore lint/style/noDescendingSpecificity: hover counterpart for the scoped content-link rules above. */
+    .card a:hover, .caption a:hover, .lead a:hover, .panel a:hover, td a:hover { border-bottom-color: var(--accent); }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 0.42rem 0.58rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: border-color 160ms var(--ease), color 160ms var(--ease), background 160ms var(--ease);
+    }
+    .nav-links a:hover, .nav-links a:focus-visible { color: var(--accent); border-color: rgba(104,228,255,0.24); background: rgba(104,228,255,0.06); outline: none; }
+
+    .hero {
+      position: relative;
+      padding: var(--space-7) 0 var(--space-7);
+      min-height: 86vh;
+      display: grid;
+      align-items: center;
+      isolation: isolate;
+    }
+    .hero::before, .hero::after { content: ""; position: absolute; pointer-events: none; z-index: -1; }
+    .hero::before {
+      inset: -12vh -16vw auto -16vw;
+      height: min(78vh, 720px);
+      opacity: 0.58;
+      background:
+        radial-gradient(circle at 24% 24%, rgba(104,228,255,0.18), transparent 18rem),
+        radial-gradient(circle at 70% 10%, rgba(138,124,255,0.16), transparent 20rem),
+        radial-gradient(circle at 54% 58%, rgba(104,228,255,0.07), transparent 26rem);
+      filter: blur(10px);
+    }
+    .hero::after {
+      inset: 3vh -9vw 2vh -9vw;
+      opacity: 0.42;
+      background-image:
+        radial-gradient(circle at 8% 22%, rgba(255,255,255,0.78) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 17% 64%, rgba(104,228,255,0.58) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 43% 18%, rgba(138,124,255,0.64) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 72% 24%, rgba(104,228,255,0.52) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 94% 30%, rgba(138,124,255,0.48) 0 0.9px, transparent 1.5px);
+      background-size: 520px 360px, 620px 430px, 700px 460px, 680px 390px, 640px 410px;
+      mask-image: radial-gradient(ellipse at 42% 24%, black 0%, black 52%, transparent 82%);
+      animation: starDrift 18s var(--ease) infinite alternate;
+    }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.06fr) minmax(320px, 0.94fr); gap: var(--space-6); align-items: end; }
+    .eyebrow, .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      width: fit-content;
+      padding: 0.5rem 0.78rem;
+      border: 1px solid rgba(104, 228, 255, 0.28);
+      border-radius: 999px;
+      background: rgba(104, 228, 255, 0.07);
+      color: var(--accent);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 680;
+    }
+    .eyebrow { margin-bottom: var(--space-4); }
+    .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 18px var(--good); }
+    h1 { margin: 0; max-width: 100%; font-size: clamp(2.8rem, 6vw, 5.55rem); line-height: 0.92; letter-spacing: -0.045em; font-weight: 850; }
+    .hero-title-accent { display: block; color: transparent; background: linear-gradient(100deg, #fff 0%, var(--accent) 44%, var(--accent-2) 100%); -webkit-background-clip: text; background-clip: text; text-shadow: 0 0 60px rgba(104, 228, 255, 0.22); }
+    .tagline { margin: var(--space-5) 0 0; max-width: 760px; color: var(--soft); font-size: clamp(1.32rem, 2.25vw, 2.15rem); line-height: 1.14; letter-spacing: -0.035em; font-weight: 650; }
+    .subtagline { margin: var(--space-3) 0 0; color: var(--muted); font-size: clamp(1.02rem, 1.6vw, 1.22rem); line-height: 1.55; }
+    .badge-row { display: flex; flex-wrap: wrap; gap: 0.62rem; margin-top: var(--space-4); }
+    .badge { color: var(--soft); background: rgba(255,255,255,0.045); border-color: rgba(255,255,255,0.12); text-transform: none; letter-spacing: 0.02em; }
+    .hero-card, .panel, .card, .table-card, .ask-band {
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.036));
+      box-shadow: var(--shadow);
+    }
+    .hero-card { position: relative; padding: var(--space-5); overflow: hidden; background: linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.035)), radial-gradient(circle at top left, rgba(104,228,255,0.13), transparent 18rem); }
+    .hero-card::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; background: linear-gradient(120deg, rgba(104,228,255,0.34), transparent 28%, transparent 72%, rgba(138,124,255,0.24)); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; padding: 1px; }
+    .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+    .metric { min-height: 142px; padding: var(--space-4); border-radius: var(--radius-md); background: rgba(255,255,255,0.055); border: 1px solid rgba(255,255,255,0.11); display: flex; flex-direction: column; justify-content: center; gap: 0.55rem; }
+    .metric b { display: block; font-size: clamp(2.1rem, 3.2vw, 3.2rem); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; font-weight: 820; color: var(--text); }
+    .metric span { display: block; color: var(--muted); font-size: 0.93rem; line-height: 1.35; }
+    .metric.featured { border-color: rgba(104,228,255,0.28); background: radial-gradient(circle at top left, rgba(104,228,255,0.16), transparent 13rem), rgba(255,255,255,0.065); }
+    .metric.featured b { color: var(--accent); }
+
+    .section { padding: var(--space-7) 0; border-top: 1px solid rgba(255,255,255,0.08); scroll-margin-top: 92px; }
+    .section-head { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.68fr); gap: var(--space-5); align-items: end; margin-bottom: var(--space-5); }
+    .kicker { color: var(--accent); text-transform: uppercase; letter-spacing: 0.13em; font-size: 0.78rem; font-weight: 740; margin-bottom: var(--space-2); }
+    h2 { margin: 0; color: var(--text); font-size: clamp(2.1rem, 4.7vw, 4.35rem); line-height: 0.98; letter-spacing: -0.06em; font-weight: 820; }
+    h3 { letter-spacing: -0.035em; }
+    .lead { margin: 0; color: var(--muted); font-size: 1.08rem; line-height: 1.65; }
+    .panel { padding: var(--space-5); }
+    .cards-2, .cards-3, .cards-4 { display: grid; gap: var(--space-4); }
+    .cards-2 { grid-template-columns: repeat(2, 1fr); }
+    .cards-3 { grid-template-columns: repeat(3, 1fr); }
+    .cards-4 { grid-template-columns: repeat(4, 1fr); }
+    .card { position: relative; min-height: 240px; padding: var(--space-5); background: radial-gradient(circle at top left, rgba(104,228,255,0.11), transparent 15rem), rgba(255,255,255,0.045); overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.24); }
+    .card::after { content: ""; position: absolute; inset: auto -25% -42% auto; width: 220px; height: 220px; border-radius: 50%; background: rgba(104,228,255,0.09); filter: blur(18px); }
+    .card > * { position: relative; z-index: 1; }
+    .card .label { display: inline-flex; margin-bottom: var(--space-4); color: var(--accent); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.11em; font-weight: 760; }
+    .card h3 { margin: 0 0 var(--space-3); font-size: 1.35rem; }
+    .card p, .panel p { margin: 0; color: var(--muted); line-height: 1.62; }
+    .card p + p, .panel p + p { margin-top: var(--space-3); }
+    .honesty { border-color: rgba(248,212,122,0.24); background: radial-gradient(circle at 12% 0%, rgba(248,212,122,0.09), transparent 18rem), rgba(255,255,255,0.045); }
+    .honesty strong { color: var(--warning); }
+    .good { border-color: rgba(139,240,197,0.22); background: radial-gradient(circle at 12% 0%, rgba(139,240,197,0.08), transparent 18rem), rgba(255,255,255,0.045); }
+    .danger { border-color: rgba(255,143,154,0.22); background: radial-gradient(circle at 12% 0%, rgba(255,143,154,0.08), transparent 18rem), rgba(255,255,255,0.045); }
+    ul.clean { display: grid; gap: 0.72rem; margin: var(--space-4) 0 0; padding: 0; list-style: none; color: var(--soft); }
+    ul.clean li { padding: 0.78rem 0.9rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.11); background: rgba(10,11,15,0.46); line-height: 1.42; font-size: 0.94rem; }
+    ul.clean b { color: var(--accent); }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: var(--space-4); }
+    .chip { border: 1px solid rgba(255,255,255,0.12); background: rgba(10, 11, 15, 0.52); border-radius: 999px; padding: 0.62rem 0.78rem; color: var(--muted); font-size: 0.85rem; }
+    .chip b { color: var(--text); }
+
+    table { width: 100%; border-collapse: collapse; color: var(--soft); }
+    .table-card { overflow: hidden; }
+    th, td { padding: 1rem; text-align: left; vertical-align: top; border-bottom: 1px solid rgba(255,255,255,0.09); line-height: 1.45; }
+    th { color: var(--accent); font-size: 0.76rem; letter-spacing: 0.11em; text-transform: uppercase; background: rgba(104,228,255,0.06); }
+    tr:last-child td { border-bottom: 0; }
+    td:first-child { color: var(--text); font-weight: 720; }
+
+    .ask-band { padding: var(--space-5); background: radial-gradient(circle at 15% 12%, rgba(104,228,255,0.14), transparent 20rem), radial-gradient(circle at 82% 8%, rgba(138,124,255,0.14), transparent 22rem), rgba(255,255,255,0.047); }
+    .closing { margin: var(--space-5) 0 0; font-size: clamp(1.45rem, 2.4vw, 2.25rem); line-height: 1.14; letter-spacing: -0.045em; color: var(--text); font-weight: 640; max-width: 38ch; }
+    .contact { margin-top: var(--space-4); color: var(--muted); line-height: 1.7; }
+    footer { padding: var(--space-6) 0; color: rgba(166,176,195,0.82); border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.92rem; line-height: 1.6; }
+    .reveal { opacity: 1; transform: none; transition: opacity 900ms var(--ease), transform 900ms var(--ease); }
+    html.js .reveal { opacity: 0; transform: translateY(28px); }
+    html.js .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    @keyframes starDrift { 0% { transform: translate3d(0, 0, 0); opacity: 0.36; } 100% { transform: translate3d(1.2rem, -0.6rem, 0); opacity: 0.48; } }
+
+    @media (max-width: 980px) {
+      .hero-grid, .section-head, .cards-2 { grid-template-columns: 1fr; }
+      .cards-3, .cards-4 { grid-template-columns: 1fr 1fr; }
+      .hero { min-height: auto; }
+      .nav { align-items: flex-start; flex-direction: column; }
+      .nav-links { justify-content: flex-start; }
+    }
+    @media (max-width: 640px) {
+      .shell { width: min(100% - 28px, var(--max)); }
+      .metric-grid, .cards-3, .cards-4 { grid-template-columns: 1fr; }
+      .hero-card, .panel, .card, .ask-band { padding: var(--space-4); }
+      .section { padding: var(--space-6) 0; }
+      th, td { display: block; padding: 0.85rem 1rem; }
+      th { display: none; }
+      td { border-bottom: 0; }
+      tr { display: block; border-bottom: 1px solid rgba(255,255,255,0.09); }
+      tr:last-child { border-bottom: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.001ms; animation-iteration-count: 1; transition-duration: 0.001ms; scroll-behavior: auto; }
+      .hero::after { animation: none; }
+      .reveal { opacity: 1; transform: none; }
+    }
+    @media print {
+      :root { color-scheme: light; --bg: #ffffff; --text: #0a0b0f; --muted: #394150; --soft: #1f2937; --accent: #006f8f; --accent-2: #3430a8; --stroke: #d7dce5; --stroke-strong: #7bbfd1; --shadow: none; }
+      body { background: #ffffff; color: var(--text); }
+      body::before, body::after, .hero::before, .hero::after, .card::after { display: none; }
+      .topbar { position: static; background: #ffffff; border-bottom: 1px solid var(--stroke); }
+      .nav-links { display: none; }
+      .hero { min-height: auto; padding: 2rem 0; }
+      .section { padding: 2rem 0; break-inside: avoid; }
+      .hero-card, .panel, .card, .table-card, .ask-band, .metric { background: #ffffff; box-shadow: none; border-color: var(--stroke); }
+      .badge, .eyebrow, .chip { background: #f5f8fb; color: #0f5f78; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="shell nav" aria-label="Grant application sections">
+      <a class="brand" href="#hero">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12.4l4.1 4.1L19 6.6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        Le-AI-Lab
+      </a>
+      <div class="nav-links">
+        <a href="#fit">Fit</a><a href="#pi">PI</a><a href="#system">System</a><a href="#project">Project</a><a href="#criteria">Criteria</a><a href="#differentiation">Differentiation</a><a href="#credits">Credits</a><a href="#closing">Close</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <section id="hero" class="hero" aria-labelledby="hero-title">
+      <div class="hero-grid">
+        <div class="reveal">
+          <div class="eyebrow"><span class="pulse-dot" aria-hidden="true"></span> AI for Science 2026</div>
+          <h1 id="hero-title">Le-AI-Lab <span class="hero-title-accent">AI for Science Application</span></h1>
+          <p class="tagline">A production multi-agent AI laboratory for frontier mathematics, built on Claude.</p>
+          <p class="subtagline">Ask: Claude API credits at the $30,000 cohort tier to remove the single bottleneck of a working, already-deployed scientific AI system.</p>
+          <div class="badge-row" aria-label="Institutional badges">
+            <span class="badge">Auburn University</span>
+            <span class="badge">Mathematics &amp; Statistics</span>
+            <span class="badge">AI for Science 2026 Cohort</span>
+          </div>
+        </div>
+        <aside class="hero-card reveal" aria-label="Credibility metrics from the current lab demo">
+          <div class="metric-grid">
+            <div class="metric featured"><b>220</b><span>instrumented proof rounds across 7 projects</span></div>
+            <div class="metric"><b>945</b><span>paper pages in the typed knowledge graph</span></div>
+            <div class="metric"><b>410</b><span>harvested lessons compounding operating memory</span></div>
+            <div class="metric"><b>716</b><span>curated SPDEForge papers supporting source-grounded reading</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="fit" class="section reveal" aria-labelledby="fit-title">
+      <div class="section-head">
+        <div><div class="kicker">01 · Program fit</div><h2 id="fit-title">A mathematics project in Anthropic's science lane.</h2></div>
+        <p class="lead">Anthropic's AI for Science cohort, announced with Claude Science on 2026-06-30, supports up to 50 projects with up to $30,000 in API credits plus Modal compute for projects running Sept 1 – Dec 1, 2026.</p>
+      </div>
+      <div class="cards-3">
+        <article class="card"><span class="label">Track</span><h3>Mathematics / significant scientific impact</h3><p>This application targets the mathematics and “other fields with significant scientific impact” track: stochastic analysis and the methodology of trustworthy AI-assisted theorem development.</p></article>
+        <article class="card"><span class="label">Scope</span><h3>Spanning domains, boundary-testing science</h3><p>The cohort language asks for projects spanning domains and exploring the boundaries of science. Le-AI-Lab tests whether Claude-orchestrated multi-agent review can make informal research mathematics auditable at scale.</p></article>
+        <article class="card"><span class="label">Criteria</span><h3>Four criteria addressed explicitly</h3><p>Scientific merit, potential impact, technical feasibility, and biosecurity screening are mapped directly below rather than buried in rhetoric.</p></article>
+      </div>
+    </section>
+
+    <section id="pi" class="section reveal" aria-labelledby="pi-title">
+      <div class="section-head">
+        <div><div class="kicker">02 · PI &amp; institution</div><h2 id="pi-title">Subject expertise plus an applied AI laboratory.</h2></div>
+        <p class="lead"><a href="http://webhome.auburn.edu/~lzc0090/">Le Chen</a> is Associate Professor in the Department of Mathematics and Statistics at Auburn University, Board Chair of Le-AI-Lab, and maintains the public research-code footprint at <a href="https://github.com/chenle02">GitHub @chenle02</a>.</p>
+      </div>
+      <div class="cards-2">
+        <article class="panel">
+          <p><strong>Research area.</strong> Stochastic partial differential equations, random fields, intermittency, and moment asymptotics, with the application focus here on the stochastic heat equation, parabolic Anderson model, KPZ universality, and moment asymptotics.</p>
+          <p><strong>Publication record.</strong> The application prompt states 40+ publications; no additional grant, award, or publication-count claims are added here.</p>
+        </article>
+        <article class="panel honesty">
+          <p><strong>Applied AI credential.</strong> The AI credential is not a certificate; it is the lab itself: production commands, model switchboards, governance artifacts, adversarial review doctrine, cost telemetry, and the public <a href="https://chenle02.github.io/SPDEs-Bib/">SPDEs-Bib</a> knowledge layer already in use.</p>
+        </article>
+      </div>
+      <div class="table-card" style="margin-top:1.5rem">
+        <table aria-label="Funding and recognition">
+          <thead><tr><th>Funding &amp; recognition</th><th>Verified credential</th></tr></thead>
+          <tbody>
+            <tr><td>Active NSF CAREER</td><td><a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2443823">NSF CAREER award DMS-2443823</a> (2025&ndash;2030), &ldquo;CAREER: Stochastic Partial Differential Equations: Analysis and Applications&rdquo;, USD 400,000.</td></tr>
+            <tr><td>NSF research grant</td><td><a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2246850">NSF grant DMS-2246850</a>, PI (2023&ndash;2026), &ldquo;Studies of the Stochastic Partial Differential Equations&rdquo;, USD 180,000.</td></tr>
+            <tr><td>NSF conference grant</td><td>NSF conference grant DMS-1947572, PI (2019&ndash;2020), &ldquo;Frontier Probability Days 2020&rdquo;, USD 32,000.</td></tr>
+            <tr><td>Simons Foundation</td><td>Collaboration Grant for Mathematicians (2019); Travel Support for Mathematicians MPS-TSM-00959981 (2022&ndash;2027), USD 40,000.</td></tr>
+            <tr><td>Peer-review service</td><td>Grant-review panelist for NSF (2023, 2026) and the Simons Foundation.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="lead" style="margin-top:1.5rem">The proposed work sits directly on the PI's active NSF CAREER program &mdash; cohort credits accelerate an already federally funded research agenda.</p>
+    </section>
+
+    <section id="system" class="section reveal" aria-labelledby="system-title">
+      <div class="section-head">
+        <div><div class="kicker">03 · The system already exists</div><h2 id="system-title">A role-based AI organization, not a chatbot.</h2></div>
+        <p class="lead">Le-AI-Lab is governed like a research lab: doctrine, decision rights, RFCs, ADRs, operating cadence, risk register, and a human PI as final authority.</p>
+      </div>
+      <div class="cards-3">
+        <article class="card"><span class="label">Organization</span><h3>Orchestrator, builders, adversaries, cold readers</h3><p>Mode A staffing uses Claude Opus as orchestrator, GPT builders, DeepSeek and Qwen adversaries, cold readers, and probationary hires. The CEO AI recommends; Le Chen remains final authority.</p></article>
+        <article class="card"><span class="label">Claude bottleneck</span><h3>Mode A is the target state</h3><p>Claude Opus is the production orchestrator. Claude also serves as a high-value cold skeptic. When Anthropic capacity is exhausted, the lab degrades to Mode B austerity with non-Anthropic orchestration. The ask is to keep the lab in Mode A.</p></article>
+        <article class="card"><span class="label">Knowledge</span><h3>LLM-first graph memory</h3><p>SPDEs-wiki is an independently designed LLM-first graph knowledge base, inspired by Andrej Karpathy's <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">LLM-wiki</a> concept but built for mathematics: stable citekey slugs, canonical section schemas, typed frontmatter relations such as extends / extended_by, project dependency edges, and a wikilink graph. It remains in access-controlled staging; the public layer is <a href="https://chenle02.github.io/SPDEs-Bib/">SPDEs-Bib</a>.</p></article>
+      </div>
+      <div class="table-card" style="margin-top:1.5rem">
+        <table aria-label="Retrieval and grounding layers">
+          <thead><tr><th>Layer</th><th>Storage and retrieval role</th></tr></thead>
+          <tbody>
+            <tr><td>refdb</td><td>BibTeX text with grep conventions; 8,000+ entries and citekey stability anchoring every emitted reference.</td></tr>
+            <tr><td>2nd + 3rd brain</td><td>YAML indices from LaTeX; weighted-field scoring (citekey 10, keywords 8, title 5, theorems 4, abstract 2) over 44 own and 716 curated papers.</td></tr>
+            <tr><td>SPDEs-wiki</td><td>Markdown graph plus derived SQLite FTS5 cache using the unicode61 tokenizer and Python re-ranking; 2,046 pages: 945 papers, 270 concepts, 629 authors.</td></tr>
+            <tr><td>papis + All_PDFs</td><td>O(1) citekey lookup over 1,000+ PDFs for rendered-paper checks when source or pages matter.</td></tr>
+            <tr><td>llm_pack</td><td>717 flattened bundles for direct context ingestion; plain text &mdash; LaTeX, YAML, Markdown &mdash; is the archival source of truth, while SQLite FTS5 is a rebuildable cache.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cards-2" style="margin-top:1.5rem">
+        <article class="panel good"><p><strong>Source-grounded corpus.</strong> SPDEForge is source-level LaTeX ground truth for all 716 forged papers and books: raw arXiv source to citation-normalized copy unified against the 8,000+-entry refdb to flattened <code>llm_pack</code> with macros expanded. Where no TeX preprint exists &mdash; books, pre-ArXiv, journal-only papers &mdash; Mathpix or LlamaParse reconstructs OCR-to-LaTeX sources and pushes them through the same normalization, so the grounding layer covers the whole corpus.</p></article>
+        <article class="panel honesty"><p><strong>Anti-hallucination assumption.</strong> LLMs hallucinate; the lab's architecture assumes it. Every citation passes a citekey-grep gate against refdb before emission; every mathematical claim is grounded in <code>llm_pack</code> source or wiki synthesis before use. Three cross-checking KBs &mdash; public SPDEs-Bib bibliography, SPDEForge source ground truth, and SPDEs-wiki synthesis &mdash; reduce hallucination to a minimum and make residual errors traceable, aligned with Claude Science's reviewer-agent and auditable-artifact philosophy.</p></article>
+      </div>
+      <div class="cards-2" style="margin-top:1.5rem">
+        <article class="panel">
+          <p><strong>Verified-Informal ladder.</strong></p>
+          <div class="chips" aria-label="Verified-Informal Levels">
+            <span class="chip"><b>VIL-0</b> Asserted</span><span class="chip"><b>VIL-1</b> Self-checked</span><span class="chip"><b>VIL-2</b> Numerically corroborated</span><span class="chip"><b>VIL-3</b> Adversarially reviewed</span><span class="chip"><b>VIL-4</b> Honesty-gated</span><span class="chip"><b>VIL-5</b> Externally validated</span>
+          </div>
+        </article>
+        <article class="panel">
+          <p><strong>Trustworthy-proof principles.</strong></p>
+          <ul class="clean">
+            <li><b>P0</b> the prompt is a conjecture not an instruction</li>
+            <li><b>P1</b> independent diverse adversaries; <b>P2</b> read the verdicts</li>
+            <li><b>P3</b> surprises get MORE scrutiny; <b>P4</b> verify the inputs</li>
+            <li><b>P5</b> verify every hallucinated specific; <b>P6</b> no faked closure; <b>P7</b> human owns the judgment</li>
+          </ul>
+        </article>
+      </div>
+      <div class="cards-2" style="margin-top:1.5rem">
+        <article class="panel"><p><strong>Full lifecycle.</strong> The same organization runs theorem development through <code>/paper-dev</code>, referee and AE workflows, literature ingestion pipelines, and HPC numerics gates on Auburn's Easley cluster. Failures become infrastructure: 410 harvested lessons are converted into prevention rules, obstruction archives, and reusable skills.</p></article>
+        <article class="panel good"><p><strong>Compound memory.</strong> Two flywheels make credits durable: each digested paper cheapens the next reconnaissance, and the version-controlled private Le-AI-Lab skill layer now holds 500+ agent-agnostic skills. The <code>/retro</code> practice distills substantial sessions into new skills, creating self-evolution and persistent operating memory at lab level.</p></article>
+      </div>
+      <div class="chips" aria-label="Selected live metrics">
+        <span class="chip"><b>29.5%</b> independent verification share</span>
+        <span class="chip"><b>65</b> independent adversarial passes</span>
+        <span class="chip"><b>24</b> forced rework rounds</span>
+        <span class="chip"><b>32</b> major issues caught</span>
+        <span class="chip"><b>6</b> honest no-go discoveries</span>
+        <span class="chip"><b>3.6%</b> adversary cost share</span>
+        <span class="chip"><b>84</b> tracked research projects</span>
+        <span class="chip"><b>517</b> operating skills</span>
+        <span class="chip"><b>79%</b> skills harvested from experience</span>
+      </div>
+    </section>
+
+    <section id="project" class="section reveal" aria-labelledby="project-title">
+      <div class="section-head">
+        <div><div class="kicker">04 · Proposed cohort project</div><h2 id="project-title">Verified-Informal Mathematics at Scale.</h2></div>
+        <p class="lead">An auditable multi-agent standard for AI-assisted theorem development, executed during Sept 1 – Dec 1, 2026.</p>
+      </div>
+      <div class="cards-3">
+        <article class="card"><span class="label">W1</span><h3>Theorem development in production</h3><p>Run reviewer-gated <code>/paper-dev</code> waves on active SPDE projects: moment asymptotics, time-fractional Anderson models, and rough-noise thresholds. Deliver submitted preprints whose proof rounds carry auditable review trails.</p></article>
+        <article class="card"><span class="label">W2</span><h3>Calibration against machine truth</h3><p>Run the lab's G9-F protocol on a small formalizable corner. Use <a href="https://leanprover-community.github.io/">Lean 4</a> as a calibration oracle to measure whether the adversarial gate accepts false statements or rejects true ones.</p></article>
+        <article class="card"><span class="label">W3</span><h3>Knowledge commons growth</h3><p>Expand the private SPDEForge / SPDEs-wiki infrastructure as access-controlled staging for gold-standard digests and obstruction maps, with public release possible later; promote vetted public artifacts to <a href="https://chenle02.github.io/SPDEs-Bib/">SPDEs-Bib</a>. API credits directly convert into durable scientific infrastructure, not just transient completions.</p></article>
+      </div>
+      <div class="table-card" style="margin-top:1.5rem">
+        <table>
+          <thead><tr><th>Workstream</th><th>Claude usage pattern</th><th>Deliverable</th><th>Success metric</th></tr></thead>
+          <tbody>
+            <tr><td>W1 · Theorem development</td><td>Claude Opus orchestration plus Claude cold-reader gates on high-value rounds.</td><td>Submitted SPDE preprints with round-by-round audit trails.</td><td>Each proof round has a logged builder output, adversarial review, response, and final gate verdict.</td></tr>
+            <tr><td>W2 · G9-F calibration</td><td>Claude designs and orchestrates blind review panels; Lean 4 supplies the calibration oracle.</td><td>Public methodology report on verified-informal reliability.</td><td>False-accept and false-reject behavior reported on a sealed-label statement bank; numerics gating on Auburn's Easley HPC cluster (~9,400 cores) complements Claude reasoning where prelimit computation is the right oracle.</td></tr>
+            <tr><td>W3 · Knowledge commons</td><td>Claude-assisted synthesis, review, and cold-reading of access-controlled SPDEs-wiki staging pages.</td><td>Vetted digests and obstruction maps promoted to the public <a href="https://chenle02.github.io/SPDEs-Bib/">SPDEs-Bib</a> layer.</td><td>New pages pass lint, source-grounding, and review criteria before public promotion.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cards-2" style="margin-top:1.5rem">
+        <article class="card good"><span class="label">Evidence of scientific output</span><h3>Discovery-grade computation already runs</h3><p>The graph-theory vertical uses Auburn's Easley HPC cluster (~9,400 cores), 64-way Slurm arrays, and up to 768 concurrent cores to complete censuses of nontrivial edge-chromatic 3-critical graphs through order 22, reproducing Brinkmann&ndash;Steffen: the unique smallest even-order 3-critical graph is the Goldberg graph. Odd-order survivor counts are 14, 94, 774, 6,984, 70,530 versus even counts 0, 0, 0, 0, 1.</p></article>
+        <article class="card"><span class="label">Outcome guarantee</span><h3>Every run returns evidence</h3><p><strong>The system never returns nothing: proof, reduction, or mapped obstruction &mdash; each a citable, replayable artifact.</strong> This is the operating guarantee behind the cohort plan.</p></article>
+      </div>
+      <div class="table-card" style="margin-top:1.5rem">
+        <table aria-label="Indicative cohort schedule">
+          <thead><tr><th>Window</th><th>Indicative milestone for Sept 1 &ndash; Dec 1 cohort</th></tr></thead>
+          <tbody>
+            <tr><td>Sept 2026</td><td>W1 wave 1; W2 corpus selection and baselines.</td></tr>
+            <tr><td>Oct 2026</td><td>W1 wave 2; W2 Lean calibration runs.</td></tr>
+            <tr><td>Nov 2026</td><td>Methodology report; W3 public promotion through <a href="https://chenle02.github.io/SPDEs-Bib/">SPDEs-Bib</a>; final deliverables.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="criteria" class="section reveal" aria-labelledby="criteria-title">
+      <div class="section-head">
+        <div><div class="kicker">05 · Evaluation criteria</div><h2 id="criteria-title">The four review questions, answered directly.</h2></div>
+        <p class="lead">The strongest argument is feasibility: credits change throughput, not integration risk.</p>
+      </div>
+      <div class="table-card">
+        <table>
+          <thead><tr><th>Criterion</th><th>Grant-specific answer</th></tr></thead>
+          <tbody>
+            <tr><td>Scientific merit</td><td>The PI has a live SPDE research program and the applied AI credential is the lab: 220 instrumented proof rounds, adversarial gates, a public <a href="https://chenle02.github.io/SPDEs-Bib/">SPDEs-Bib</a> layer, and governance artifacts already operating.</td></tr>
+            <tr><td>Potential impact</td><td>The verified-informal standard is transferable to mathematical sciences where formal proof is not yet available. SPDEs-wiki keeps vetted internal staging memory; skills, obstruction maps, and the public <a href="https://chenle02.github.io/SPDEs-Bib/">SPDEs-Bib</a> layer make outputs reusable rather than private lab memory; every use compounds both the knowledge base and the 500+ skill operating layer.</td></tr>
+            <tr><td>Technical feasibility</td><td>The system is already in production on Claude. The requested credits keep the lab in Mode A full staffing; no new integration layer is required.</td></tr>
+            <tr><td>Biosecurity</td><td>Pure mathematics has zero dual-use biological surface. The project is trivially clean for biosecurity screening.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="differentiation" class="section reveal" aria-labelledby="diff-title">
+      <div class="section-head">
+        <div><div class="kicker">06 · Differentiation</div><h2 id="diff-title">Why this is not Axiom Math.</h2></div>
+        <p class="lead">Axiom Math and Harmonic validate the verification thesis. The differentiator is not autonomy; it is verified autonomy in the adjacent niche they structurally do not cover.</p>
+      </div>
+      <div class="table-card">
+        <table>
+          <thead><tr><th>Axis</th><th>Axiom / Harmonic</th><th>Le-AI-Lab</th></tr></thead>
+          <tbody>
+            <tr><td>Operating goal</td><td>Autonomous AI mathematicians and verified software.</td><td>Amplification, not autonomy: PI judgment, taste, authorship, and accountability stay in the loop.</td></tr>
+            <tr><td>Domain</td><td>Lean-formalizable regions such as number theory, algebra, and combinatorics.</td><td>The formalizable corner is not the whole sky: SPDEs and stochastic analysis, where Walsh space-time integrals, Wiener chaos, Malliavin calculus, and SPDE machinery are still absent from Lean.</td></tr>
+            <tr><td>Correctness substrate</td><td>Machine-checked Lean or Coq proof when the domain is formalizable.</td><td>Natural-language verified-informal review: a result standard and a process standard, backed by multi-model adversaries, named hypotheses, obstruction maps, and selective Lean calibration where cheap.</td></tr>
+            <tr><td>Knowledge base</td><td>Model weights and formal libraries.</td><td>Curated human-readable corpus: SPDEForge source ground truth, access-controlled SPDEs-wiki graph staging, refdb, public <a href="https://chenle02.github.io/SPDEs-Bib/">SPDEs-Bib</a>, PDFs, and brain retrieval indices.</td></tr>
+            <tr><td>Negative knowledge</td><td>Failed searches are normally invisible pipeline waste.</td><td>Failed routes become archived obstructions, “do not re-attempt” records, and permanent skills.</td></tr>
+            <tr><td>Economics</td><td>Axiom is press-reported at about $1.6B valuation and $264M raised.</td><td>About $10^3 lower cost basis: orchestration over frontier APIs, no model training.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="lead" style="margin-top:1.5rem">Respectfully: this is complementary, not competitive. Venture-scale formal-proof companies are building the formalizable future; Le-AI-Lab is building an auditable standard for the analysis-heavy mathematics that formal methods cannot yet reach. The landscape memo notes Brownian motion in Lean only in Nov 2025 and first machine-checked Itô calculus in June 2026; SPDE infrastructure remains absent.</p>
+    </section>
+
+    <section id="credits" class="section reveal" aria-labelledby="credits-title">
+      <div class="section-head">
+        <div><div class="kicker">07 · Credit-use plan</div><h2 id="credits-title">Metered credits, not token burn.</h2></div>
+        <p class="lead">The lab is token-thirsty by design: every verified result runs 2&ndash;4 independent model checks, so reliability scales with tokens. Cohort credits would be budgeted by workstream over Sept&ndash;Dec with per-round cost tracking, <code>experiments.tsv</code>, and a model switchboard for expensive reviewers.</p>
+      </div>
+      <div class="table-card">
+        <table>
+          <thead><tr><th>Approx. split</th><th>Use</th><th>Metering discipline</th></tr></thead>
+          <tbody>
+            <tr><td>~50%</td><td>W1 theorem-development orchestration, adversarial review passes, and Claude cold reads per paper-dev round.</td><td>Round-level logs: goal, model route, review outcome, cost row, and gate verdict.</td></tr>
+            <tr><td>~30%</td><td>W2 G9-F calibration runs: blind panels, re-adjudication, and methodology-report drafting.</td><td>Statement-bank accounting and false-accept / false-reject reporting against Lean-oracle labels.</td></tr>
+            <tr><td>~20%</td><td>W3 SPDEForge / SPDEs-wiki digest waves, obstruction-map synthesis, cold-reader audits, and promotion into the public <a href="https://chenle02.github.io/SPDEs-Bib/">SPDEs-Bib</a> layer.</td><td>Page-level lint, source-grounding, and review artifacts before public promotion; the private source and synthesis KBs are the lab's most laborious, token-thirsty artifacts, maintained by the agent workforce itself.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cards-3" style="margin-top:1.5rem">
+        <article class="card"><span class="label">Cost control</span><h3>Role routing</h3><p>Opus is reserved for orchestration and high-value cold review; builders and routine adversaries are routed through cheaper capable models when appropriate. The ensemble is deliberate, not waste.</p></article>
+        <article class="card"><span class="label">Telemetry</span><h3>Evidence before claims</h3><p>Per-round telemetry is already part of the stack. The blueprint ledger records a 3.71B-token measured floor over 94 active days, 39.5M tokens per active day, and a ~7.2B-token six-month estimate.</p></article>
+        <article class="card"><span class="label">Constraint</span><h3>The binding input is Anthropic capacity</h3><p>Mode B exists only because Mode A can run out of Anthropic capacity. The ledger's 62% / 38% Anthropic vs non-Anthropic split and 3.49B cache-read tokens show sustained context reuse; the credit ask removes the Anthropic constraint for the cohort window.</p></article>
+      </div>
+      <div class="table-card" style="margin-top:1.5rem">
+        <table aria-label="Risk mitigation plan">
+          <thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+          <tbody>
+            <tr><td>Token-throughput constraint</td><td>Mode B fallback exists, but degrades orchestration quality; the requested credits directly de-risk full Mode A staffing during the cohort window.</td></tr>
+            <tr><td>Model churn</td><td>Model switchboard plus probationary-hire process: new routes are tested, scored, and promoted only after evidence.</td></tr>
+            <tr><td>Correctness risk</td><td>Layered gates and honest-deferment doctrine: if a proof cannot close, the lab returns a named hypothesis or mapped obstruction, not faked closure.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="closing" class="section reveal" aria-labelledby="closing-title">
+      <div class="ask-band">
+        <div class="kicker">08 · Closing</div>
+        <h2 id="closing-title">A modest ask for an already-running instrument.</h2>
+        <p class="closing">Le-AI-Lab is not asking Anthropic to fund a speculative integration project. It is asking for Claude capacity to keep a production scientific AI laboratory in its full-staffing mode for one cohort window. The output is concrete: auditable theorem-development rounds, a calibrated verified-informal methodology report, and vetted public artifacts promoted through <a href="https://chenle02.github.io/SPDEs-Bib/">SPDEs-Bib</a>.</p>
+        <div class="contact" aria-label="Contact block">
+          <strong>Le Chen</strong><br>
+          Associate Professor, Department of Mathematics and Statistics, Auburn University<br>
+          Email: le.chen@auburn.edu · <a href="http://webhome.auburn.edu/~lzc0090/">Auburn homepage</a> · <a href="https://github.com/chenle02">GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell">
+    Le-AI-Lab · AI for Science supporting document · Self-contained offline HTML · Metrics trace to the local blueprint and strategy files read for this application.
+  </footer>
+
+  <script>
+    (() => {
+      document.documentElement.classList.add("js");
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+      if (reduceMotion || !("IntersectionObserver" in window)) {
+        reveals.forEach((el) => {
+          el.classList.add("is-visible");
+        });
+        return;
+      }
+      var observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: 0.16, rootMargin: "0px 0px -8% 0px" });
+      reveals.forEach((el) => {
+        observer.observe(el);
+      });
+      window.setTimeout(() => {
+        reveals.forEach((el) => {
+          el.classList.add("is-visible");
+        });
+      }, 1800);
+    })();
+  </script>
+</body>
+</html>
