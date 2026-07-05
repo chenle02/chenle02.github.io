@@ -1,0 +1,44 @@
+# chenle02.github.io — site-wide robots policy
+# Search engines: allowed to crawl (so per-page <meta name="robots" content="noindex"> is honored).
+User-agent: *
+Allow: /
+
+# AI training / retrieval crawlers: keep the grant application page out of AI corpora.
+User-agent: GPTBot
+Disallow: /grant/
+
+User-agent: OAI-SearchBot
+Disallow: /grant/
+
+User-agent: ChatGPT-User
+Disallow: /grant/
+
+User-agent: ClaudeBot
+Disallow: /grant/
+
+User-agent: Claude-SearchBot
+Disallow: /grant/
+
+User-agent: anthropic-ai
+Disallow: /grant/
+
+User-agent: CCBot
+Disallow: /grant/
+
+User-agent: Google-Extended
+Disallow: /grant/
+
+User-agent: PerplexityBot
+Disallow: /grant/
+
+User-agent: Bytespider
+Disallow: /grant/
+
+User-agent: Amazonbot
+Disallow: /grant/
+
+User-agent: Applebot-Extended
+Disallow: /grant/
+
+User-agent: Meta-ExternalAgent
+Disallow: /grant/
