@@ -34,7 +34,7 @@ itself links to publications, CV, Google Scholar, ORCID, and GitHub.)*
 
 ## Q1 — Research team: expertise and credentials (scientific domain + AI/ML)
 
-**Word count: 261**
+**Word count: 281**
 
 Le-AI-Lab is a founder-led research laboratory. Its research team is the
 principal investigator, the network of research coauthors he publishes with, and
@@ -57,11 +57,14 @@ panelist (2023, 2026).
 AI-research operating system — an orchestrated ensemble of AI builders and
 independent adversarial reviewers (Claude Opus alongside GPT, DeepSeek, Qwen,
 and other frontier models), disciplined by measured verification gates, a
-2,024-page machine-first knowledge graph (945 digested papers), and a
-self-evolving memory of 523 skills. This system has run 220 instrumented,
-reviewer-gated proof rounds across 7 SPDE projects (a "round" = one complete
+2,457-page machine-first knowledge graph (1,007 digested papers), and a
+self-evolving memory of 713 skills, 601 harvested from lived sessions. This
+system has run 236 instrumented, reviewer-gated proof rounds across 10
+telemetry-bearing research projects (a "round" = one complete
 cycle: builder draft, independent adversarial review, gate verdict, logged
-entry). An earlier year as a visiting scholar at Microsoft Research Asia grounds
+entry; figures as of 2026-07-22, re-derivable from `content/papers/*.md`, the
+methodology ledger, and each project's `experiments.tsv`). An earlier year as a
+visiting scholar at Microsoft Research Asia grounds
 the applied-ML instinct. The team therefore unites the person who knows *where to
 aim* with the engineer who *built the instrument*.
 
@@ -82,7 +85,7 @@ workforce he architected — Claude in the orchestrator and cold-reviewer roles,
 alongside builder and adversary models — plus his standing network of research
 coauthors, who validate specific results through normal referee and
 collaboration channels. Continuity does not hang on one person's uptime: the
-entire workflow is codified in version-controlled runbooks and 523 operational
+entire workflow is codified in version-controlled runbooks and 713 operational
 skills, and the PI's current Auburn PhD advisee will be trained as a backup
 operator in the cohort's first weeks (personnel supported by existing
 university and grant resources — credits fund compute, not people). Claude
@@ -154,7 +157,7 @@ public knowledge-commons artifacts (digests, obstruction maps) on SPDEs-Bib.
 
 ## Q4 — How Claude's capabilities will be used (≤ 300 words)
 
-**Word count: 212**
+**Word count: 283**
 
 Claude is the reasoning core of an already-integrated research workflow, not a
 side tool: it performs three concrete jobs inside every proof round.
@@ -175,6 +178,15 @@ review panels whose accept/reject decisions are scored against a Lean-4 ground
 truth. In W3, Claude synthesizes, reviews, and cold-reads knowledge-base pages
 before they are promoted to the public commons.
 
+**A live contest, not a vendor assumption.** Claude Opus currently leads
+paper-development orchestration and high-value cold review. GPT-5.6 Sol has
+emerged as a formidable challenger for long-horizon, cross-repository
+orchestration, while GPT-5.4 High is our strongest current mathematical builder.
+Le-AI-Lab judges these routes empirically — by defects caught, rework forced,
+closure quality, latency, and cost. Anthropic support would let us test whether
+Claude's scientific-judgment advantage persists when capacity no longer forces
+fallback routing.
+
 Integration is complete today: Claude runs through the lab's model switchboard
 with per-round cost telemetry (`experiments.tsv`), role separation, and honest
 deferment doctrine (if a proof cannot close, Claude returns a named hypothesis or
@@ -185,7 +197,7 @@ orchestrator and cold-review roles at full throughput for the cohort window.
 
 ## Q5 — Acceleration vs. existing methods (≤ 200 words)
 
-**Word count: 158**
+**Word count: 156**
 
 Existing tools force a false choice: Lean-style proof assistants give certainty
 but cannot yet reach analysis-heavy mathematics like SPDEs, while a raw chatbot
@@ -194,11 +206,11 @@ that gap — it brings frontier reasoning to un-formalizable proofs *and* runs t
 independent adversarial and cold-reader gates that make the output auditable, so
 a single mathematician gets the throughput of a small proof-and-referee team.
 
-Concretely, the system has already run 220 instrumented, reviewer-gated proof
-rounds across 7 SPDE projects; each round that a human would need hours to draft,
-attack, and referee is compressed into a logged, replayable cycle. Claude Science
-credits remove the
-single binding constraint on this speedup: current throughput supply (the
+Concretely, the system has already run 236 instrumented, reviewer-gated proof
+rounds across 10 telemetry-bearing research projects; each round that a human
+would need hours to draft, attack, and referee is compressed into a logged,
+replayable cycle. Claude Science credits remove the single binding constraint on
+this speedup: current throughput supply (the
 $200/month plan's capacity) is exhausted roughly mid-week under the workload the
 system can sustain — credits keep every round at full Claude orchestration and
 cold-review quality for the entire cohort, turning a demonstrated method into
@@ -278,11 +290,16 @@ open-source record rather than starting one.
 
 **Requested amount: $30,000 in credits (the maximum award).**
 
-The system already sustains a measured ~39.5M tokens per active day (a 3.71B-token
-floor over 94 active days). Current plan capacity is exhausted roughly mid-week,
-at which point non-Claude models handle the remaining workload — adequate in the
-past, but the constraint that prevents running every round at full Claude quality.
-The credit ask removes this binding constraint for the full Sept 1 – Dec 1 window.
+The local multi-harness ledger records a 1.06T-token measured floor over 98 active
+days (Oct 17, 2025 – Jul 22, 2026), including 1.04T cache-read tokens: about
+10.82B tokens per active day and a ~1.97T-token six-month workload extrapolation.
+These are workload-volume counts from heterogeneous local logs, not billed-token
+equivalence or a complete multi-machine history. The old 62/38 provider snapshot
+is therefore retired: current logs are dominated by Codex cache-read telemetry
+and do not support an apples-to-apples provider-quality comparison. Current
+Claude plan capacity is still exhausted roughly mid-week; the credit ask restores
+enough Claude capacity for a matched, outcome-scored cohort test rather than
+routing by availability.
 
 The credits convert directly into scientific output, budgeted by workstream with
 per-round cost telemetry (`experiments.tsv`) and cost-aware role routing (Opus
@@ -307,7 +324,7 @@ mathematics — plus the concrete SPDE results and public infrastructure it prod
 
 The strongest point in this application is **feasibility**: this is not a proposal
 to build a system, it is a request to keep an *already-running* one at full
-quality. The verified loop has completed 220 instrumented, reviewer-gated proof
+quality. The verified loop has completed 236 instrumented, reviewer-gated proof
 rounds orchestrated by Claude; the integration risk is near-zero because the
 system already runs on Claude's current API — credits change throughput, not
 architecture. The project is also trivially clean for biosecurity screening:
@@ -324,3 +341,16 @@ and the real telemetry (token ledger, HPC census, knowledge-base and skill
 metrics) behind every claim above.
 
 ---
+
+> **Metrics provenance (as of 2026-07-22).** All quantitative claims are live,
+> conservatively rounded, and re-derivable:
+> - **1,007 digested papers / 2,457-page KB** — `rg -l '^digested: true$'
+>   content/papers --glob '*.md' | wc -l` and `find content -name '*.md' | wc -l`
+>   in `SPDEs-wiki`.
+> - **713 skills, 601 learned (84%)** — `python3 bin/skills-moat-ledger.py --json`.
+> - **236 proof rounds across 10 telemetry-bearing projects** — `python3
+>   bin/methodology-ledger.py --json`; 79 are independent adversarial or
+>   verification passes, 27 forced rework, and 33 recorded major issues.
+> - **1.06T logged-token floor over 98 active days** — `python3
+>   bin/token-usage-ledger.py --json`; includes 1.04T cache-read tokens and is a
+>   local workload-volume floor, not billed-token equivalence.
